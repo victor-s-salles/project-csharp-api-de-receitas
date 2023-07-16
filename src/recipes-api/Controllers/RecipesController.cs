@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Logging.Console;
 
 namespace recipes_api.Controllers;
 
@@ -35,7 +36,7 @@ public class RecipesController : ControllerBase
     public IActionResult Get(string name)
     {
         var recipe = _service.GetRecipe(name);
-        if (recipe == null) return NotFound("receita não encontrada");
+        if (recipe == null) return NotFound();
         return Ok(recipe);
     }
 
@@ -53,9 +54,12 @@ public class RecipesController : ControllerBase
     [HttpPut("{name}")]
     public IActionResult Update(string name, [FromBody] Recipe recipe)
     {
+        if (!_service.RecipeExists(name))
+        {
+            return BadRequest();
+        }
         try
         {
-            _service.RecipeExists(name);
             _service.UpdateRecipe(recipe);
             return NoContent();
         }
@@ -69,6 +73,9 @@ public class RecipesController : ControllerBase
     [HttpDelete("{name}")]
     public IActionResult Delete(string name)
     {
-        throw new NotImplementedException();
+        var recipe = _service.GetRecipe(name);
+        if (recipe == null) return NotFound();
+        _service.DeleteRecipe(name);
+        return NoContent();
     }
 }
