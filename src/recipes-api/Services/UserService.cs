@@ -12,7 +12,7 @@ public class UserService : IUserService
     {
         this.users = new List<User>
         {
-            new User { 
+            new User {
                 Email = "pessoa@betrybe.com",
                 Name = "Pessoa tryber",
                 Password = "senhaTryber"}
@@ -20,14 +20,14 @@ public class UserService : IUserService
     }
 
     public void AddUser(User user)
-    {        
-        this.users.Add(user);                
+    {
+        this.users.Add(user);
     }
 
     public void DeleteUser(string email)
-    {        
+    {
         var toRemove = this.users.Where(x => x.Email.ToLower() == email.ToLower()).FirstOrDefault();
-        this.users.Remove(toRemove);              
+        this.users.Remove(toRemove);
     }
 
     public void UpdateUser(User item)
